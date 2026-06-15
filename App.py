@@ -19,8 +19,16 @@ NAMES = [
 
 WINNER = "Anantha"
 
-st.title("🎡 Buddy Picker")
-st.write("Spin the wheel to reveal your buddy!")
+st.markdown(
+    """
+    <div style='text-align:center'>
+        <h1>🎡 Buddy Picker</h1>
+        <h2>Welcome Kondina Vijay 👋</h2>
+        <h3>Spin the wheel to reveal your buddy 🎡</h3>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 wheel_html = f"""
 <!DOCTYPE html>
@@ -121,12 +129,10 @@ for(let i=0;i<total;i++) {{
     const start = polarToCartesian(0,0,220,endAngle);
     const end = polarToCartesian(0,0,220,startAngle);
 
-    const largeArcFlag = angle > 180 ? 1 : 0;
-
     const pathData = [
         "M 0 0",
         "L", start.x, start.y,
-        "A 220 220 0", largeArcFlag, 0, end.x, end.y,
+        "A 220 220 0 0 0", end.x, end.y,
         "Z"
     ].join(" ");
 
