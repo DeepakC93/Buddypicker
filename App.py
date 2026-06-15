@@ -37,6 +37,7 @@ wheel_html = f"""
 <meta charset="utf-8">
 
 <style>
+
 body {{
     margin:0;
     padding:0;
@@ -71,6 +72,16 @@ body {{
     font-weight:bold;
     color:#16a34a;
 }}
+
+.message {{
+    margin-top:20px;
+    max-width:700px;
+    font-size:18px;
+    line-height:1.6;
+    color:#333;
+    padding:0 20px;
+}}
+
 </style>
 </head>
 
@@ -91,6 +102,7 @@ body {{
 </svg>
 
 <div id="result" class="result"></div>
+<div id="message" class="message"></div>
 
 </div>
 
@@ -176,7 +188,6 @@ for(let i=0;i<total;i++) {{
 }}
 
 const winnerIndex = names.indexOf("{WINNER}");
-
 const sliceAngle = 360 / names.length;
 
 const stopAngle =
@@ -190,8 +201,13 @@ setTimeout(() => {{
 }}, 500);
 
 setTimeout(() => {{
+
     document.getElementById("result").innerHTML =
-    "🎉 Your Buddy Is: <br><span style='font-size:42px'>{WINNER}</span>";
+        "🎉 Your Buddy Is 🎉<br><span style='font-size:48px'>{WINNER}</span>";
+
+    document.getElementById("message").innerHTML =
+        "<p><strong>Anantha</strong> will help you get familiarised with office spaces, teammates, and help you get along with the DBMCI culture.</p>";
+
 }}, 8500);
 
 </script>
@@ -201,5 +217,5 @@ setTimeout(() => {{
 """
 
 if st.button("🎯 Spin Wheel", use_container_width=True):
-    components.html(wheel_html, height=650)
+    components.html(wheel_html, height=850)
     st.balloons()
