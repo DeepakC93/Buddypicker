@@ -70,16 +70,25 @@ body {{
     margin-top:20px;
     font-size:30px;
     font-weight:bold;
-    color:#16a34a;
+    color:white;
+    background:#0f172a;
+    padding:20px;
+    border-radius:12px;
+    width:fit-content;
+    margin-left:auto;
+    margin-right:auto;
 }}
 
 .message {{
     margin-top:20px;
     max-width:700px;
     font-size:18px;
-    line-height:1.6;
-    color:#333;
-    padding:0 20px;
+    line-height:1.7;
+    color:white;
+    background:#1e293b;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.15);
 }}
 
 </style>
@@ -101,8 +110,8 @@ body {{
 
 </svg>
 
-<div id="result" class="result"></div>
-<div id="message" class="message"></div>
+<div id="result" class="result" style="display:none;"></div>
+<div id="message" class="message" style="display:none;"></div>
 
 </div>
 
@@ -149,8 +158,8 @@ for(let i=0;i<total;i++) {{
     ].join(" ");
 
     const path = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "path"
+        "http://www.w3.org/2000/svg",
+        "path"
     );
 
     path.setAttribute("d", pathData);
@@ -160,15 +169,20 @@ for(let i=0;i<total;i++) {{
 
     svgGroup.appendChild(path);
 
-    const textAngle = startAngle + angle/2;
+    const textAngle = startAngle + angle / 2;
     const textRadius = 140;
 
-    const textX = textRadius * Math.cos((textAngle-90) * Math.PI/180);
-    const textY = textRadius * Math.sin((textAngle-90) * Math.PI/180);
+    const textX =
+        textRadius *
+        Math.cos((textAngle - 90) * Math.PI / 180);
+
+    const textY =
+        textRadius *
+        Math.sin((textAngle - 90) * Math.PI / 180);
 
     const text = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "text"
+        "http://www.w3.org/2000/svg",
+        "text"
     );
 
     text.setAttribute("x", textX);
@@ -177,9 +191,10 @@ for(let i=0;i<total;i++) {{
     text.setAttribute("font-size", "14");
     text.setAttribute("font-weight", "bold");
     text.setAttribute("text-anchor", "middle");
+
     text.setAttribute(
-      "transform",
-      `rotate(${{textAngle}}, ${{textX}}, ${{textY}})`
+        "transform",
+        `rotate(${{textAngle}}, ${{textX}}, ${{textY}})`
     );
 
     text.textContent = names[i];
@@ -191,7 +206,7 @@ const winnerIndex = names.indexOf("{WINNER}");
 const sliceAngle = 360 / names.length;
 
 const stopAngle =
-    (360 - ((winnerIndex * sliceAngle) + sliceAngle/2))
+    (360 - ((winnerIndex * sliceAngle) + sliceAngle / 2))
     + (360 * 8);
 
 const wheel = document.getElementById("wheel");
@@ -202,11 +217,18 @@ setTimeout(() => {{
 
 setTimeout(() => {{
 
-    document.getElementById("result").innerHTML =
+    const result = document.getElementById("result");
+    const message = document.getElementById("message");
+
+    result.style.display = "block";
+    message.style.display = "block";
+
+    result.innerHTML =
         "🎉 Your Buddy Is 🎉<br><span style='font-size:48px'>{WINNER}</span>";
 
-    document.getElementById("message").innerHTML =
-        "<p><strong>Anantha</strong> will help you get familiarised with office spaces, teammates, and help you get along with the DBMCI culture.</p>";
+    message.innerHTML =
+        "<p><strong>Anantha</strong> will help you get familiarised with office spaces, teammates, and guide you through the DBMCI culture.</p>" +
+        "<p>Feel free to reach out for any questions, support, or simply to get settled into your new journey with us.</p>";
 
 }}, 8500);
 
@@ -217,5 +239,5 @@ setTimeout(() => {{
 """
 
 if st.button("🎯 Spin Wheel", use_container_width=True):
-    components.html(wheel_html, height=850)
+    components.html(wheel_html, height=900)
     st.balloons()
