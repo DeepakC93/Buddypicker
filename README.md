@@ -1,2 +1,2 @@
 # Buddypicker
-Assign a buddy o Onboard them into DBMCI culture 
+Assign a buddy to Onboard them into DBMCI culture 
