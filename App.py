@@ -7,72 +7,36 @@ st.set_page_config(
     layout="centered"
 )
 
-# --------------------------------------------------
-# CONFIGURATION
-# --------------------------------------------------
-
 NAMES = [
-    "Rahul",
-    "Priya",
-    "Arjun",
-    "Neha",
-    "Kiran",
-    "Sneha"
+    "Anantha",
+    "Shivam",
+    "Deepak",
+    "Nikitha",
+    "Afroze",
+    "Nawaz",
+    "Gourav"
 ]
 
-PREDETERMINED_BUDDY = "Priya"
-
-# --------------------------------------------------
-# SESSION STATE
-# --------------------------------------------------
-
-if "spun" not in st.session_state:
-    st.session_state.spun = False
+WINNER = "Anantha"
 
 st.title("🎡 Buddy Picker")
-st.write("Spin the wheel to discover your buddy!")
+st.write("Spin the wheel to reveal your buddy!")
 
-# --------------------------------------------------
-# ALREADY SPUN
-# --------------------------------------------------
-
-if st.session_state.spun:
-    st.success(f"🎉 Your Buddy is: {PREDETERMINED_BUDDY}")
-    st.balloons()
-    st.stop()
-
-# --------------------------------------------------
-# SPIN BUTTON
-# --------------------------------------------------
-
-spin = st.button("🎯 Spin The Wheel", use_container_width=True)
-
-# --------------------------------------------------
-# WHEEL HTML
-# --------------------------------------------------
-
-winner_index = NAMES.index(PREDETERMINED_BUDDY)
-segment_angle = 360 / len(NAMES)
-
-# pointer at top
-target_angle = (
-    360 * 8
-    + (360 - (winner_index * segment_angle + segment_angle / 2))
-)
-
-html = f"""
+wheel_html = f"""
 <!DOCTYPE html>
 <html>
 <head>
-<style>
+<meta charset="utf-8">
 
+<style>
 body {{
     margin:0;
     padding:0;
     text-align:center;
+    font-family:Arial,sans-serif;
 }}
 
-.wrapper {{
+.container {{
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -84,95 +48,39 @@ body {{
     border-left:18px solid transparent;
     border-right:18px solid transparent;
     border-top:35px solid red;
-    z-index:10;
+    margin-bottom:5px;
 }}
 
-.wheel {{
-    width:420px;
-    height:420px;
-    border-radius:50%;
-    border:8px solid #222;
-    position:relative;
-    overflow:hidden;
-    transition: transform 8s cubic-bezier(.17,.67,.12,.99);
-}}
-
-.segment {{
-    position:absolute;
-    width:50%;
-    height:50%;
-    transform-origin:100% 100%;
-}}
-
-.label {{
-    position:absolute;
-    left:70%;
-    top:25%;
-    transform: rotate(90deg);
-    font-size:16px;
-    font-weight:bold;
-    color:white;
+#wheel {{
+    width:500px;
+    height:500px;
+    transition:transform 8s cubic-bezier(.17,.67,.12,.99);
 }}
 
 .result {{
-    margin-top:25px;
-    font-size:32px;
+    margin-top:20px;
+    font-size:30px;
     font-weight:bold;
-    color:green;
+    color:#16a34a;
 }}
-
-.spin {{
-    transform: rotate({target_angle}deg);
-}}
-
 </style>
 </head>
 
 <body>
 
-<div class="wrapper">
+<div class="container">
 
 <div class="pointer"></div>
 
-<div id="wheel" class="wheel">
+<svg id="wheel" viewBox="-250 -250 500 500">
 
-    <div class="segment"
-         style="background:#ff6b6b;
-         transform:rotate(0deg) skewY(-30deg);">
-        <div class="label">Rahul</div>
-    </div>
+<circle cx="0" cy="0" r="245" fill="white" stroke="#222" stroke-width="5"/>
 
-    <div class="segment"
-         style="background:#4ecdc4;
-         transform:rotate(60deg) skewY(-30deg);">
-        <div class="label">Priya</div>
-    </div>
+<g id="segments"></g>
 
-    <div class="segment"
-         style="background:#f7b731;
-         transform:rotate(120deg) skewY(-30deg);">
-        <div class="label">Arjun</div>
-    </div>
+<circle cx="0" cy="0" r="25" fill="#222"/>
 
-    <div class="segment"
-         style="background:#45aaf2;
-         transform:rotate(180deg) skewY(-30deg);">
-        <div class="label">Neha</div>
-    </div>
-
-    <div class="segment"
-         style="background:#20bf6b;
-         transform:rotate(240deg) skewY(-30deg);">
-        <div class="label">Kiran</div>
-    </div>
-
-    <div class="segment"
-         style="background:#a55eea;
-         transform:rotate(300deg) skewY(-30deg);">
-        <div class="label">Sneha</div>
-    </div>
-
-</div>
+</svg>
 
 <div id="result" class="result"></div>
 
@@ -180,15 +88,104 @@ body {{
 
 <script>
 
+const names = {NAMES};
+
+const colors = [
+ "#ef4444",
+ "#f97316",
+ "#eab308",
+ "#22c55e",
+ "#06b6d4",
+ "#3b82f6",
+ "#a855f7"
+];
+
+const svgGroup = document.getElementById("segments");
+
+const total = names.length;
+const angle = 360 / total;
+
+function polarToCartesian(cx, cy, r, deg) {{
+    const rad = (deg - 90) * Math.PI / 180.0;
+    return {{
+        x: cx + (r * Math.cos(rad)),
+        y: cy + (r * Math.sin(rad))
+    }};
+}}
+
+for(let i=0;i<total;i++) {{
+
+    const startAngle = i * angle;
+    const endAngle = (i + 1) * angle;
+
+    const start = polarToCartesian(0,0,220,endAngle);
+    const end = polarToCartesian(0,0,220,startAngle);
+
+    const largeArcFlag = angle > 180 ? 1 : 0;
+
+    const pathData = [
+        "M 0 0",
+        "L", start.x, start.y,
+        "A 220 220 0", largeArcFlag, 0, end.x, end.y,
+        "Z"
+    ].join(" ");
+
+    const path = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+
+    path.setAttribute("d", pathData);
+    path.setAttribute("fill", colors[i % colors.length]);
+    path.setAttribute("stroke", "white");
+    path.setAttribute("stroke-width", "2");
+
+    svgGroup.appendChild(path);
+
+    const textAngle = startAngle + angle/2;
+    const textRadius = 140;
+
+    const textX = textRadius * Math.cos((textAngle-90) * Math.PI/180);
+    const textY = textRadius * Math.sin((textAngle-90) * Math.PI/180);
+
+    const text = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "text"
+    );
+
+    text.setAttribute("x", textX);
+    text.setAttribute("y", textY);
+    text.setAttribute("fill", "white");
+    text.setAttribute("font-size", "14");
+    text.setAttribute("font-weight", "bold");
+    text.setAttribute("text-anchor", "middle");
+    text.setAttribute(
+      "transform",
+      `rotate(${{textAngle}}, ${{textX}}, ${{textY}})`
+    );
+
+    text.textContent = names[i];
+
+    svgGroup.appendChild(text);
+}}
+
+const winnerIndex = names.indexOf("{WINNER}");
+
+const sliceAngle = 360 / names.length;
+
+const stopAngle =
+    (360 - ((winnerIndex * sliceAngle) + sliceAngle/2))
+    + (360 * 8);
+
 const wheel = document.getElementById("wheel");
-const result = document.getElementById("result");
 
 setTimeout(() => {{
-    wheel.classList.add("spin");
-}}, 300);
+    wheel.style.transform = `rotate(${{stopAngle}}deg)`;
+}}, 500);
 
 setTimeout(() => {{
-    result.innerHTML = "🎉 Your Buddy Is: {PREDETERMINED_BUDDY} 🎉";
+    document.getElementById("result").innerHTML =
+    "🎉 Your Buddy Is: <br><span style='font-size:42px'>{WINNER}</span>";
 }}, 8500);
 
 </script>
@@ -197,20 +194,6 @@ setTimeout(() => {{
 </html>
 """
 
-# --------------------------------------------------
-# DISPLAY
-# --------------------------------------------------
-
-if spin:
-    st.session_state.spun = True
-
-    components.html(
-        html,
-        height=550,
-        scrolling=False
-    )
-
+if st.button("🎯 Spin Wheel", use_container_width=True):
+    components.html(wheel_html, height=650)
     st.balloons()
-
-else:
-    st.info("Click the button to spin.")
