@@ -23,7 +23,7 @@ st.markdown(
     """
     <div style='text-align:center'>
         <h1>🎡 Buddy Picker</h1>
-        <h2>Welcome Kondina Vijay 👋</h2>
+        <h2>Welcome Konidena Vijay 👋</h2>
         <h3>Spin the wheel to reveal your buddy 🎡</h3>
     </div>
     """,
